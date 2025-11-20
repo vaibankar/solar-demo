@@ -1,51 +1,67 @@
-# ============================
-# 1. Base image
-# ============================
-FROM node:18-alpine AS base
+#############################################
+# 1️⃣ FRONTEND BUILD (React/Vue/Angular)
+#############################################
+FROM node:18-alpine AS frontend-build
 
-WORKDIR /app
+WORKDIR /app/frontend
+COPY frontend/package*.json ./
+RUN npm ci
+COPY frontend . .
+RUN npm run build
 
-# ============================
-# 2. Copy backend package files
-# ============================
-COPY backend/package*.json ./backend/
-RUN cd backend && npm install
 
-# ============================
-# 3. Copy frontend package files
-# ============================
-COPY frontend/package*.json ./frontend/
-RUN cd frontend && npm install
-
-# ============================
-# 4. Copy source code
-# ============================
-COPY backend ./backend
-COPY frontend ./frontend
-
-# ============================
-# 5. Build frontend
-# ============================
-RUN cd frontend && npm run build
-
-# ============================
-# 6. Move frontend build → backend/public
-# ============================
-RUN mkdir -p backend/public \
-    && cp -r frontend/dist/* backend/public/
-
-# ============================
-# 7. Final stage (runtime)
-# ============================
-FROM node:18-alpine
-
-WORKDIR /app
-
-# Copy only backend (which now includes frontend build)
-COPY --from=base /app/backend ./backend
+#############################################
+# 2️⃣ BACKEND BUILD (Node.js API)
+#############################################
+FROM node:18-alpine AS backend-build
 
 WORKDIR /app/backend
+COPY backend/package*.json ./
+RUN npm ci --only=production
+COPY backend . .
 
-EXPOSE 3000
 
-CMD ["npm", "start"]
+#############################################
+# 3️⃣ FINAL IMAGE (Nginx + Node + Supervisor)
+#############################################
+FROM alpine:latest
+
+# Install nginx + node + supervisor
+RUN apk add --no-cache nodejs npm nginx supervisor
+
+WORKDIR /app
+
+#############################
+# Copy backend
+#############################
+COPY --from=backend-build /app/backend ./backend
+
+#############################
+# Copy frontend build to nginx html
+#############################
+COPY --from=frontend-build /app/frontend/dist /usr/share/nginx/html
+
+#############################
+# Supervisor config
+#############################
+RUN mkdir -p /etc/supervisor.d
+
+COPY <<EOF /etc/supervisor.d/services.ini
+[supervisord]
+nodaemon=true
+
+[program:backend]
+command=node /app/backend/src/server.js
+autostart=true
+autorestart=true
+
+[program:nginx]
+command=nginx -g "daemon off;"
+autostart=true
+autorestart=true
+EOF
+
+EXPOSE 80     # Frontend via Nginx
+EXPOSE 4000   # Backend API
+
+CMD ["supervisord", "-c", "/etc/supervisor.d/services.ini"]
