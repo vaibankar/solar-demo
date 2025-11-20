@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: solar-frontend
+  namespace: solar-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: solar-frontend
+  template:
+    metadata:
+      labels:
+        app: solar-frontend
+    spec:
+      containers:
+      - name: solar-frontend
+        image: your-docker-registry/solar-frontend:latest
+        ports:
+        - containerPort: 80
