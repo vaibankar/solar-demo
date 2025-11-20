@@ -1,65 +1,34 @@
-#############################################
-# 1️⃣ FRONTEND BUILD (React/Vue/Angular)
-#############################################
-FROM node:18-alpine AS frontend-build
-
-WORKDIR /app/frontend
-COPY frontend/package*.json ./
-COPY frontend . .
-RUN npm run build
-
-
-#############################################
-# 2️⃣ BACKEND BUILD (Node.js API)
-#############################################
-FROM node:18-alpine AS backend-build
-
-WORKDIR /app/backend
-COPY backend/package*.json ./
-COPY backend . .
-
-
-#############################################
-# 3️⃣ FINAL IMAGE (Nginx + Node + Supervisor)
-#############################################
-FROM alpine:latest
-
-# Install nginx + node + supervisor
-RUN apk add --no-cache nodejs npm nginx supervisor
+FROM node:18-alpine AS build
 
 WORKDIR /app
 
-#############################
-# Copy backend
-#############################
-COPY --from=backend-build /app/backend ./backend
+### Install backend deps
+COPY backend/package*.json ./backend/
+WORKDIR /app/backend
+RUN npm install
 
-#############################
-# Copy frontend build to nginx html
-#############################
-COPY --from=frontend-build /app/frontend/dist /usr/share/nginx/html
+### Install & build frontend
+WORKDIR /app/frontend
+COPY frontend/package*.json ./
+RUN npm install
+COPY frontend . .
+RUN npm run build
 
-#############################
-# Supervisor config
-#############################
-RUN mkdir -p /etc/supervisor.d
+### Final Production Image
+FROM node:18-alpine
 
-COPY <<EOF /etc/supervisor.d/services.ini
-[supervisord]
-nodaemon=true
+WORKDIR /app/backend
 
-[program:backend]
-command=node /app/backend/src/server.js
-autostart=true
-autorestart=true
+ENV NODE_ENV=production
 
-[program:nginx]
-command=nginx -g "daemon off;"
-autostart=true
-autorestart=true
-EOF
+# Copy backend code
+COPY backend . .
 
-EXPOSE 80     # Frontend via Nginx
-EXPOSE 4000   # Backend API
+# Copy frontend build to backend public folder
+COPY --from=build /app/frontend/dist ./public
 
-CMD ["supervisord", "-c", "/etc/supervisor.d/services.ini"]
+# Install only prod modules
+RUN npm install --only=production
+
+EXPOSE 4000
+CMD ["node", "src/server.js"]
