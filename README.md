@@ -92,7 +92,21 @@ Remove the container:
 docker rm timer-tools
 ```
 
-### Option 3: Using a Local Web Server
+### Option 3: Using Kubernetes
+
+See the [k8s/README.md](k8s/README.md) for detailed Kubernetes deployment instructions.
+
+Quick start:
+```bash
+# Build and push image to your registry
+docker build -t your-registry/timer-tools:latest .
+docker push your-registry/timer-tools:latest
+
+# Update image in k8s/deployment.yaml, then deploy
+kubectl apply -k k8s/
+```
+
+### Option 4: Using a Local Web Server
 
 #### Python 3:
 ```bash

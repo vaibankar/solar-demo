@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: timer-tools-service
+  labels:
+    app: timer-tools
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 80
+    targetPort: 80
+    protocol: TCP
+    name: http
+  selector:
+    app: timer-tools
+

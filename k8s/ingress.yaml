@@ -1,0 +1,38 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: timer-tools-ingress
+  labels:
+    app: timer-tools
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: timer-tools.local
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: timer-tools-service
+            port:
+              number: 80
+  # Uncomment and configure for HTTPS
+  # - host: timer-tools.example.com
+  #   http:
+  #     paths:
+  #     - path: /
+  #       pathType: Prefix
+  #       backend:
+  #         service:
+  #           name: timer-tools-service
+  #           port:
+  #             number: 80
+  # tls:
+  # - hosts:
+  #   - timer-tools.example.com
+  #   secretName: timer-tools-tls
+
