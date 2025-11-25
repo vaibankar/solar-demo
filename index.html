@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Free Online Timer Tools - Stopwatch & Countdown</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>⏱️ Timer Tools</h1>
+            <p class="tagline">Free online stopwatch, countdown, and timing tools</p>
+        </div>
+    </header>
+
+    <nav class="quick-access">
+        <div class="container">
+            <div class="quick-buttons">
+                <button class="quick-btn" data-tool="stopwatch" style="--color: #4CAF50;">
+                    <span class="icon">⏱️</span>
+                    <span>Stopwatch</span>
+                </button>
+                <button class="quick-btn" data-tool="countdown" style="--color: #2196F3;">
+                    <span class="icon">⏳</span>
+                    <span>Countdown</span>
+                </button>
+                <button class="quick-btn" data-tool="split-lap" style="--color: #FF9800;">
+                    <span class="icon">🏃</span>
+                    <span>Split Lap</span>
+                </button>
+                <button class="quick-btn" data-tool="interval" style="--color: #9C27B0;">
+                    <span class="icon">🔄</span>
+                    <span>Interval</span>
+                </button>
+                <button class="quick-btn" data-tool="clock" style="--color: #00BCD4;">
+                    <span class="icon">🕐</span>
+                    <span>Clock</span>
+                </button>
+                <button class="quick-btn" data-tool="alarm" style="--color: #F44336;">
+                    <span class="icon">🔔</span>
+                    <span>Alarm</span>
+                </button>
+                <button class="quick-btn" data-tool="metronome" style="--color: #E91E63;">
+                    <span class="icon">🎵</span>
+                    <span>Metronome</span>
+                </button>
+                <button class="quick-btn" data-tool="chess" style="--color: #795548;">
+                    <span class="icon">♟️</span>
+                    <span>Chess Clock</span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container">
+        <!-- Stopwatch Section -->
+        <section id="stopwatch" class="tool-section active" style="--section-color: #4CAF50;">
+            <div class="tool-header">
+                <h2>⏱️ Stopwatch</h2>
+                <div class="header-actions">
+                    <button class="color-picker-btn" onclick="openColorPicker('stopwatch')" title="Change Color">🎨</button>
+                    <button class="fullscreen-btn" onclick="toggleFullscreen('stopwatch')" title="Toggle Fullscreen">⛶</button>
+                </div>
+            </div>
+            <div class="timer-display">
+                <div class="time" id="stopwatch-time">00:00:00.00</div>
+            </div>
+            <div class="controls">
+                <button class="btn btn-primary" id="stopwatch-start">Start <span class="shortcut">Space</span></button>
+                <button class="btn btn-accent" id="stopwatch-split">Split <span class="shortcut">S</span></button>
+                <button class="btn btn-secondary" id="stopwatch-pause">Pause</button>
+                <button class="btn btn-secondary" id="stopwatch-reset">Reset <span class="shortcut">R</span></button>
+            </div>
+            <div class="shortcuts-hint">
+                <span>Shortcuts: <strong>Space</strong> Start/Stop | <strong>S</strong> Split | <strong>R</strong> Reset | <strong>F</strong> Fullscreen</span>
+            </div>
+            <div class="laps" id="stopwatch-laps"></div>
+        </section>
+
+        <!-- Countdown Timer Section -->
+        <section id="countdown" class="tool-section" style="--section-color: #2196F3;">
+            <div class="tool-header">
+                <h2>⏳ Countdown Timer</h2>
+                <div class="header-actions">
+                    <button class="color-picker-btn" onclick="openColorPicker('countdown')" title="Change Color">🎨</button>
+                    <button class="fullscreen-btn" onclick="toggleFullscreen('countdown')" title="Toggle Fullscreen">⛶</button>
+                </div>
+            </div>
+            <div class="timer-display">
+                <div class="time" id="countdown-time">00:00:00</div>
+            </div>
+            <div class="input-group">
+                <input type="number" id="countdown-hours" placeholder="Hours" min="0" max="99">
+                <span>:</span>
+                <input type="number" id="countdown-minutes" placeholder="Minutes" min="0" max="59">
+                <span>:</span>
+                <input type="number" id="countdown-seconds" placeholder="Seconds" min="0" max="59">
+            </div>
+            <div class="controls">
+                <button class="btn btn-primary" id="countdown-start">Start</button>
+                <button class="btn btn-secondary" id="countdown-pause">Pause</button>
+                <button class="btn btn-secondary" id="countdown-reset">Reset</button>
+            </div>
+            <div class="presets">
+                <button class="preset-btn" data-minutes="1">1 min</button>
+                <button class="preset-btn" data-minutes="5">5 min</button>
+                <button class="preset-btn" data-minutes="10">10 min</button>
+                <button class="preset-btn" data-minutes="15">15 min</button>
+                <button class="preset-btn" data-minutes="30">30 min</button>
+            </div>
+        </section>
+
+        <!-- Split Lap Timer Section -->
+        <section id="split-lap" class="tool-section" style="--section-color: #FF9800;">
+            <div class="tool-header">
+                <h2>🏃 Split Lap Timer</h2>
+                <div class="header-actions">
+                    <button class="color-picker-btn" onclick="openColorPicker('split-lap')" title="Change Color">🎨</button>
+                    <button class="fullscreen-btn" onclick="toggleFullscreen('split-lap')" title="Toggle Fullscreen">⛶</button>
+                </div>
+            </div>
+            <div class="timer-display">
+                <div class="time" id="split-time">00:00:00.00</div>
+            </div>
+            <div class="controls">
+                <button class="btn btn-primary" id="split-start">Start</button>
+                <button class="btn btn-accent" id="split-lap">Lap</button>
+                <button class="btn btn-secondary" id="split-pause">Pause</button>
+                <button class="btn btn-secondary" id="split-reset">Reset</button>
+            </div>
+            <div class="laps" id="split-laps"></div>
+        </section>
+
+        <!-- Interval Timer Section -->
+        <section id="interval" class="tool-section" style="--section-color: #9C27B0;">
+            <div class="tool-header">
+                <h2>🔄 Interval Timer & Routines</h2>
+                <div class="header-actions">
+                    <button class="color-picker-btn" onclick="openColorPicker('interval')" title="Change Color">🎨</button>
+                    <button class="fullscreen-btn" onclick="toggleFullscreen('interval')" title="Toggle Fullscreen">⛶</button>
+                </div>
+            </div>
+            <div class="routine-tabs">
+                <button class="tab-btn active" data-tab="simple">Simple Timer</button>
+                <button class="tab-btn" data-tab="routine">Custom Routine</button>
+            </div>
+            
+            <!-- Simple Timer -->
+            <div class="tab-content active" id="simple-timer">
+                <div class="timer-display">
+                    <div class="time" id="interval-time">00:00</div>
+                    <div class="interval-status" id="interval-status">Ready</div>
+                </div>
+                <div class="input-group">
+                    <label>Work Time (seconds)</label>
+                    <input type="number" id="interval-work" value="30" min="1">
+                </div>
+                <div class="input-group">
+                    <label>Rest Time (seconds)</label>
+                    <input type="number" id="interval-rest" value="10" min="1">
+                </div>
+                <div class="input-group">
+                    <label>Rounds</label>
+                    <input type="number" id="interval-rounds" value="5" min="1">
+                </div>
+                <div class="controls">
+                    <button class="btn btn-primary" id="interval-start">Start</button>
+                    <button class="btn btn-secondary" id="interval-pause">Pause</button>
+                    <button class="btn btn-secondary" id="interval-reset">Reset</button>
+                </div>
+                <div class="rounds-info">
+                    <span>Round: <strong id="current-round">0</strong> / <strong id="total-rounds">5</strong></span>
+                </div>
+            </div>
+            
+            <!-- Custom Routine Builder -->
+            <div class="tab-content" id="routine-builder">
+                <div class="routine-builder">
+                    <div class="input-group">
+                        <label>Routine Name</label>
+                        <input type="text" id="routine-name" placeholder="Morning Workout" maxlength="30">
+                    </div>
+                    <div class="routine-steps" id="routine-steps"></div>
+                    <div class="controls">
+                        <button class="btn btn-accent" id="add-step">+ Add Step</button>
+                        <button class="btn btn-primary" id="save-routine">Save Routine</button>
+                    </div>
+                    <div class="saved-routines">
+                        <label>Saved Routines</label>
+                        <select id="saved-routines-list" class="routine-select">
+                            <option value="">Select a routine...</option>
+                        </select>
+                        <div class="controls">
+                            <button class="btn btn-primary" id="load-routine">Load</button>
+                            <button class="btn btn-secondary" id="delete-routine">Delete</button>
+                        </div>
+                    </div>
+                    <div class="timer-display" id="routine-timer-display" style="display: none;">
+                        <div class="time" id="routine-time">00:00</div>
+                        <div class="interval-status" id="routine-step-name">Ready</div>
+                    </div>
+                    <div class="controls" id="routine-controls" style="display: none;">
+                        <button class="btn btn-primary" id="routine-start">Start Routine</button>
+                        <button class="btn btn-secondary" id="routine-pause">Pause</button>
+                        <button class="btn btn-secondary" id="routine-reset">Reset</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Digital Clock Section -->
+        <section id="clock" class="tool-section" style="--section-color: #00BCD4;">
+            <div class="tool-header">
+                <h2>🕐 Digital Clock</h2>
+                <div class="header-actions">
+                    <button class="color-picker-btn" onclick="openColorPicker('clock')" title="Change Color">🎨</button>
+                    <button class="fullscreen-btn" onclick="toggleFullscreen('clock')" title="Toggle Fullscreen">⛶</button>
+                </div>
+            </div>
+            <div class="timer-display">
+                <div class="time large" id="clock-time">00:00:00</div>
+                <div class="date" id="clock-date">Monday, January 1, 2024</div>
+            </div>
+            <div class="controls">
+                <button class="btn btn-secondary" id="clock-format">12-Hour</button>
+                <select class="btn btn-secondary" id="clock-timezone" style="padding: 0.75rem 1.5rem;">
+                    <option value="local">Local Time</option>
+                    <option value="UTC">UTC</option>
+                    <option value="America/New_York">New York (EST/EDT)</option>
+                    <option value="America/Chicago">Chicago (CST/CDT)</option>
+                    <option value="America/Denver">Denver (MST/MDT)</option>
+                    <option value="America/Los_Angeles">Los Angeles (PST/PDT)</option>
+                    <option value="Europe/London">London (GMT/BST)</option>
+                    <option value="Europe/Paris">Paris (CET/CEST)</option>
+                    <option value="Asia/Tokyo">Tokyo (JST)</option>
+                    <option value="Asia/Shanghai">Shanghai (CST)</option>
+                    <option value="Australia/Sydney">Sydney (AEDT/AEST)</option>
+                </select>
+            </div>
+        </section>
+
+        <!-- Alarm Clock Section -->
+        <section id="alarm" class="tool-section" style="--section-color: #F44336;">
+            <div class="tool-header">
+                <h2>🔔 Alarm Clock</h2>
+                <div class="header-actions">
+                    <button class="color-picker-btn" onclick="openColorPicker('alarm')" title="Change Color">🎨</button>
+                    <button class="fullscreen-btn" onclick="toggleFullscreen('alarm')" title="Toggle Fullscreen">⛶</button>
+                </div>
+            </div>
+            <div class="timer-display">
+                <div class="time" id="alarm-time">00:00:00</div>
+            </div>
+            <div class="input-group">
+                <label>Set Alarm Time</label>
+                <input type="time" id="alarm-set-time" value="07:00">
+            </div>
+            <div class="input-group">
+                <label>Custom Message (Optional)</label>
+                <input type="text" id="alarm-message" placeholder="Wake up! Time for coffee..." maxlength="50">
+            </div>
+            <div class="controls">
+                <button class="btn btn-primary" id="alarm-set">Set Alarm</button>
+                <button class="btn btn-secondary" id="alarm-clear">Clear All</button>
+            </div>
+            <div class="alarm-status" id="alarm-status">No alarm set</div>
+            <div class="alarm-list" id="alarm-list"></div>
+        </section>
+
+        <!-- Metronome Section -->
+        <section id="metronome" class="tool-section" style="--section-color: #E91E63;">
+            <div class="tool-header">
+                <h2>🎵 Metronome</h2>
+                <div class="header-actions">
+                    <button class="color-picker-btn" onclick="openColorPicker('metronome')" title="Change Color">🎨</button>
+                    <button class="fullscreen-btn" onclick="toggleFullscreen('metronome')" title="Toggle Fullscreen">⛶</button>
+                </div>
+            </div>
+            <div class="timer-display">
+                <div class="bpm-display" id="metronome-bpm">120 BPM</div>
+                <div class="beat-indicator" id="beat-indicator">●</div>
+            </div>
+            <div class="input-group">
+                <label>BPM (Beats Per Minute)</label>
+                <input type="range" id="metronome-bpm-slider" min="40" max="200" value="120">
+                <input type="number" id="metronome-bpm-input" value="120" min="40" max="200">
+            </div>
+            <div class="controls">
+                <button class="btn btn-primary" id="metronome-start">Start</button>
+                <button class="btn btn-secondary" id="metronome-stop">Stop</button>
+            </div>
+            <div class="presets">
+                <button class="preset-btn" data-bpm="60">60</button>
+                <button class="preset-btn" data-bpm="80">80</button>
+                <button class="preset-btn" data-bpm="120">120</button>
+                <button class="preset-btn" data-bpm="140">140</button>
+                <button class="preset-btn" data-bpm="160">160</button>
+            </div>
+        </section>
+
+        <!-- Chess Clock Section -->
+        <section id="chess" class="tool-section" style="--section-color: #795548;">
+            <div class="tool-header">
+                <h2>♟️ Chess Clock</h2>
+                <div class="header-actions">
+                    <button class="color-picker-btn" onclick="openColorPicker('chess')" title="Change Color">🎨</button>
+                    <button class="fullscreen-btn" onclick="toggleFullscreen('chess')" title="Toggle Fullscreen">⛶</button>
+                </div>
+            </div>
+            <div class="chess-container">
+                <div class="chess-player" id="player1">
+                    <div class="player-name">Player 1</div>
+                    <div class="time large" id="chess-time-1">10:00</div>
+                    <button class="btn btn-primary" id="chess-switch-1">Switch</button>
+                </div>
+                <div class="chess-divider"></div>
+                <div class="chess-player" id="player2">
+                    <div class="player-name">Player 2</div>
+                    <div class="time large" id="chess-time-2">10:00</div>
+                    <button class="btn btn-primary" id="chess-switch-2">Switch</button>
+                </div>
+            </div>
+            <div class="input-group">
+                <label>Time per player (minutes)</label>
+                <input type="number" id="chess-time-setting" value="10" min="1">
+            </div>
+            <div class="controls">
+                <button class="btn btn-primary" id="chess-start">Start Game</button>
+                <button class="btn btn-secondary" id="chess-reset">Reset</button>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>Free online timer tools - No registration required</p>
+        </div>
+    </footer>
+
+    <!-- Color Picker Modal -->
+    <div id="color-picker-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Choose Timer Color</h3>
+                <button class="modal-close" onclick="closeColorPicker()">&times;</button>
+            </div>
+            <div class="color-options">
+                <div class="color-option" data-color="#4CAF50" style="background: #4CAF50;"></div>
+                <div class="color-option" data-color="#2196F3" style="background: #2196F3;"></div>
+                <div class="color-option" data-color="#FF9800" style="background: #FF9800;"></div>
+                <div class="color-option" data-color="#9C27B0" style="background: #9C27B0;"></div>
+                <div class="color-option" data-color="#00BCD4" style="background: #00BCD4;"></div>
+                <div class="color-option" data-color="#F44336" style="background: #F44336;"></div>
+                <div class="color-option" data-color="#E91E63" style="background: #E91E63;"></div>
+                <div class="color-option" data-color="#795548" style="background: #795548;"></div>
+                <div class="color-option" data-color="#607D8B" style="background: #607D8B;"></div>
+                <div class="color-option" data-color="#009688" style="background: #009688;"></div>
+                <div class="color-option" data-color="#FF5722" style="background: #FF5722;"></div>
+                <div class="color-option" data-color="#3F51B5" style="background: #3F51B5;"></div>
+            </div>
+            <div class="input-group">
+                <label>Or enter custom color (hex):</label>
+                <input type="color" id="custom-color-picker" value="#4CAF50">
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
+

@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  timer-tools:
+    build: .
+    container_name: timer-tools
+    ports:
+      - "8080:80"
+    restart: unless-stopped
+    labels:
+      - "com.timer-tools.description=Free Online Timer Tools"
+      - "com.timer-tools.version=1.0"
+
